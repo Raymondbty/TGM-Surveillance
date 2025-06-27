@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>System Tracking Radar - Prospect Corp</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      color: #00FF00;
+    }
+
+    canvas {
+      display: block;
+      background: radial-gradient(ellipse at center, #001100 0%, #000000 100%);
+    }
+
+    #alert {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: red;
+      font-size: 1.2rem;
+      text-shadow: 0 0 5px red;
+      display: none;
+    }
+
+    #overlay {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .corner {
+      position: absolute;
+      font-size: 14px;
+      padding: 10px;
+      white-space: pre;
+    }
+
+    .top-left {
+      top: 10px;
+      left: 10px;
+      text-align: left;
+    }
+
+    .top-right {
+      top: 10px;
+      right: 10px;
+      text-align: right;
+    }
+
+    .top-center {
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    #logoContainer {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      width: 120px;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+    
+    #logoContainer img {
+      width: 100%;
+      height: auto;
+      filter: brightness(0.9) saturate(2) drop-shadow(0 0 5px #00ff00);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="radar"></canvas>
+<div id="alert">⚠️ VESSEL LOST FROM TRACKING ARRAY ⚠️</div>
+
+<div id="overlay">
+  <div class="corner top-left">
+    SYSTEM: ASTRA-COM ARRAY 03
+    MONITOR NODE: THETA-7
+    DATA SYNC: ACTIVE █
+  </div>
+
+  <div class="corner top-right">
+    OPERATOR: TGM
+    SIGNAL RANGE: 2.5 AU
+    TRACKING MODE: WIDE SWEEP
+  </div>
+
+  <div id="logoContainer">
+    <img src="logosurveillance2.png" alt="Prospect Corp Logo">
+  </div>
+<script>
+  const canvas = document.getElementById('radar');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+
+  const planets = [
+    { name: 'EOS-4', desc: 'Terrestrial, mild atmosphere', radius: 80, angle: 0, speed: 0.0012 },
+    { name: 'BETA-9', desc: 'Gas Giant', radius: 140, angle: 2, speed: 0.0008 },
+    { name: 'KYTHER-1', desc: 'Frozen surface, uninhabitable', radius: 200, angle: 1.5, speed: 0.0005 },
+    { name: 'ORION-GATE', desc: 'Jump node', radius: 270, angle: 3.7, speed: 0.0003 }
+  ];
+
+  function drawRadarGrid() {
+    ctx.strokeStyle = 'rgba(0,255,0,0.1)';
+    ctx.lineWidth = 1;
+
+    for (let r = 100; r < canvas.width / 2; r += 100) {
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, r, 0, 2 * Math.PI);
+      ctx.stroke();
+    }
+
+    for (let i = 0; i < 360; i += 30) {
+      const rad = i * Math.PI / 180;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(
+        centerX + Math.cos(rad) * canvas.width,
+        centerY + Math.sin(rad) * canvas.height
+      );
+      ctx.stroke();
+    }
+  }
+
+  function drawSun() {
+    ctx.fillStyle = '#00FF00';
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 10, 0, 2 * Math.PI); // Bigger sun
+    ctx.fill();
+
+    ctx.font = '12px Courier New';
+    ctx.fillText(`[STAR: NEMESIS]`, centerX + 12, centerY - 5);
+    ctx.fillText(`        \\___ Class K Subgiant – 4421 K`, centerX + 12, centerY + 10);
+  }
+
+  function drawPlanets() {
+    ctx.fillStyle = '#00FF00';
+    ctx.font = '12px Courier New';
+
+    planets.forEach(planet => {
+      const x = centerX + planet.radius * Math.cos(planet.angle);
+      const y = centerY + planet.radius * Math.sin(planet.angle);
+
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.fillText(`[PLANET: ${planet.name}]`, x + 10, y - 5);
+      ctx.fillText(`         \\___ ${planet.desc}`, x + 10, y + 10);
+
+      planet.angle += planet.speed;
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawRadarGrid();
+    drawSun();
+    drawPlanets();
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+
+</body>
+</html>
