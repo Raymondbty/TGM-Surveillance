@@ -118,7 +118,6 @@
     ETA TO NEMESIS: 3.2 MINUTES  
   </div>
 </div>
-<div id="alert">⚠️ VESSEL LOST FROM TRACKING ARRAY ⚠️</div>
 
 <div id="overlay">
   <div class="corner top-left">
@@ -203,7 +202,6 @@
       planet.angle += planet.speed;
     });
   
-  // --- DRAW STATIC SHIP ---
   const vesselX = centerX + 300;
   const vesselY = centerY - 40; // décalé vers le haut
 
@@ -213,15 +211,8 @@
   ctx.fill();
 
   ctx.font = '11px Courier New';
-  ctx.fillText(`[VESSEL: THANATOS 42-A32]`, vesselX + 10, vesselY - 5);
+  ctx.fillText(`[VESSEL: BOREALIS A43-B]`, vesselX + 10, vesselY - 5);
   ctx.fillText(`         \\___ Incoming - Velocity Stable`, vesselX + 10, vesselY + 10);
-
-  // --- Trajectory line (optionnel) ---
-  ctx.strokeStyle = 'rgba(0,255,0,0.1)';
-  ctx.beginPath();
-  ctx.moveTo(centerX, centerY);
-  ctx.lineTo(vesselX, vesselY);
-  ctx.stroke();
   }
 
   function animate() {
