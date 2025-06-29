@@ -76,11 +76,48 @@
       height: auto;
       filter: brightness(0.9) saturate(2) drop-shadow(0 0 5px #00ff00);
     }
+    #vesselInfo {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border: 1px solid #00FF00;
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: #00FF00;
+      font-family: 'Courier New', monospace;
+      z-index: 10;
+    }
+    
+    #vesselInfo img {
+      width: 120px; /* Plus grand */
+      height: auto;
+      filter: brightness(0.9) contrast(1.2) drop-shadow(0 0 5px #00ff00);
+    }
+    
+    #vesselInfo .text {
+      font-size: 12px; /* Plus petit */
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
 
+  
 <canvas id="radar"></canvas>
+<div id="vesselInfo">
+  <img src="Borealis.png" alt="Vessel" />
+  <div class="text">
+    VESSEL: BOREALIS A43-B
+    CLASS: Marine Life Research Vessel
+    OWNER: ALTERRA CORP
+    STATUS: APPROACH VECTOR LOCKED  
+    ETA TO NEMESIS: 3.2 MINUTES  
+  </div>
+</div>
 <div id="alert">⚠️ VESSEL LOST FROM TRACKING ARRAY ⚠️</div>
 
 <div id="overlay">
@@ -151,20 +188,40 @@
   function drawPlanets() {
     ctx.fillStyle = '#00FF00';
     ctx.font = '12px Courier New';
-
+  
     planets.forEach(planet => {
       const x = centerX + planet.radius * Math.cos(planet.angle);
       const y = centerY + planet.radius * Math.sin(planet.angle);
-
+  
       ctx.beginPath();
       ctx.arc(x, y, 4, 0, 2 * Math.PI);
       ctx.fill();
-
+  
       ctx.fillText(`[PLANET: ${planet.name}]`, x + 10, y - 5);
       ctx.fillText(`         \\___ ${planet.desc}`, x + 10, y + 10);
-
+  
       planet.angle += planet.speed;
     });
+  
+  // --- DRAW STATIC SHIP ---
+  const vesselX = centerX + 300;
+  const vesselY = centerY - 40; // décalé vers le haut
+
+  ctx.fillStyle = '#00FF00';
+  ctx.beginPath();
+  ctx.arc(vesselX, vesselY, 2, 0, 2 * Math.PI);
+  ctx.fill();
+
+  ctx.font = '11px Courier New';
+  ctx.fillText(`[VESSEL: THANATOS 42-A32]`, vesselX + 10, vesselY - 5);
+  ctx.fillText(`         \\___ Incoming - Velocity Stable`, vesselX + 10, vesselY + 10);
+
+  // --- Trajectory line (optionnel) ---
+  ctx.strokeStyle = 'rgba(0,255,0,0.1)';
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY);
+  ctx.lineTo(vesselX, vesselY);
+  ctx.stroke();
   }
 
   function animate() {
