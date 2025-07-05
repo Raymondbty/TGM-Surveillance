@@ -17,15 +17,25 @@
       background: radial-gradient(ellipse at center, #001100 0%, #000000 100%);
     }
 
-    #alert {
+    #alertBanner {
       position: absolute;
-      top: 20px;
+      top: 40px;
       left: 50%;
       transform: translateX(-50%);
-      color: red;
-      font-size: 1.2rem;
-      text-shadow: 0 0 5px red;
-      display: none;
+      background: red;
+      color: black;
+      font-weight: bold;
+      font-size: 1.5rem;
+      padding: 10px 30px;
+      border: 2px solid black;
+      text-shadow: 1px 1px 2px #000;
+      z-index: 1000;
+      animation: flash 1s infinite alternate;
+    }
+
+    @keyframes flash {
+      from { opacity: 1; }
+      to { opacity: 0.3; }
     }
 
     #overlay {
@@ -55,13 +65,6 @@
       text-align: right;
     }
 
-    .top-center {
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-    }
-
     #logoContainer {
       position: absolute;
       bottom: 10px;
@@ -79,6 +82,8 @@
   </style>
 </head>
 <body>
+
+<div id="alertBanner">!! ALERT: SIGNAL LOST FROM THANATOS 42-A32 !!</div>
 
 <canvas id="radar"></canvas>
 
@@ -98,6 +103,7 @@
   <div id="logoContainer">
     <img src="logosurveillance2.png" alt="Prospect Corp Logo">
   </div>
+</div>
 
 <script>
   const canvas = document.getElementById('radar');
@@ -145,7 +151,7 @@
 
     ctx.font = '12px Courier New';
     ctx.fillText(`[STAR: NEMESIS]`, centerX + 12, centerY - 5);
-    ctx.fillText(`        \___ Class K Subgiant – 4421 K`, centerX + 12, centerY + 10);
+    ctx.fillText(`        \\___ Class K Subgiant – 4421 K`, centerX + 12, centerY + 10);
   }
 
   function drawPlanets() {
@@ -161,7 +167,7 @@
       ctx.fill();
   
       ctx.fillText(`[PLANET: ${planet.name}]`, x + 10, y - 5);
-      ctx.fillText(`         \___ ${planet.desc}`, x + 10, y + 10);
+      ctx.fillText(`         \\___ ${planet.desc}`, x + 10, y + 10);
   
       planet.angle += planet.speed;
     });
@@ -176,19 +182,23 @@
 
     ctx.font = '11px Courier New';
     ctx.fillText(`[VESSEL: BOREALIS A43-B]`, borealisX + 10, borealisY - 5);
-    ctx.fillText(`         \___ Status: LEFT SYSTEM`, borealisX + 10, borealisY + 10);
+    ctx.fillText(`         \\___ Status: LEFT SYSTEM`, borealisX + 10, borealisY + 10);
 
     const thanatosX = centerX + 200;
-    const thanatosY = centerY + 210;
+    const thanatosY = centerY + 100;
 
-    ctx.fillStyle = '#00FF00';
-    ctx.beginPath();
-    ctx.arc(thanatosX, thanatosY, 2, 0, 2 * Math.PI);
-    ctx.fill();
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(thanatosX - 5, thanatosY - 5, 20, 20);
 
+    ctx.fillStyle = 'red';
+    ctx.font = 'bold 16px Courier New';
+    ctx.fillText('?', thanatosX + 2, thanatosY + 13);
+
+    ctx.fillStyle = '#FF4444';
     ctx.font = '11px Courier New';
-    ctx.fillText(`[VESSEL: THANATOS 42-A32]`, thanatosX + 10, thanatosY - 5);
-    ctx.fillText(`         \___ En route to SIGMA-221`, thanatosX + 10, thanatosY + 10);
+    ctx.fillText(`[VESSEL: THANATOS 42-A32]`, thanatosX + 25, thanatosY - 5);
+    ctx.fillText(`         \\___ Status: SIGNAL LOST`, thanatosX + 25, thanatosY + 10);
   }
 
   function drawAsteroidBelt() {
@@ -211,7 +221,7 @@
     ctx.fillStyle = '#00FF00';
     ctx.font = '11px Courier New';
     ctx.fillText(`[ASTEROID BELT: SIGMA-221]`, centerX - 190, centerY + 300);
-    ctx.fillText(`       \___ Potential mineral yield: IRON, NICKEL, RARE EARTHS`, centerX - 190, centerY + 320);
+    ctx.fillText(`       \\___ Potential mineral yield: IRON, NICKEL, RARE EARTHS`, centerX - 190, centerY + 320);
   }
 
   function animate() {
@@ -228,3 +238,4 @@
 
 </body>
 </html>
+
